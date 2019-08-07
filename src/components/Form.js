@@ -294,7 +294,7 @@ class Form extends Component {
                 aria-label="Select Flow Type"
               />
               <button type="submit" onSubmit={this.handleSubmit}>Generate Graphs</button>
-              <button><a href={config.GSTM_link} target="_blank" rel="noopener noreferrer">Return to the Global Steel Trade Monitor</a></button>
+              <a className="buttonStyle" href={config.GSTM_link} target="_blank" rel="noopener noreferrer">Return to the Global Steel Trade Monitor</a>
             </LoadingOverlay>
           </form>
         </div>
