@@ -165,8 +165,8 @@ class Form extends Component {
     let errorMessage = this.formValidation();
     if (errorMessage === "") {
       event.preventDefault();
-      this.setState({ submitted: true, message: "" })
       this.props.history.push({ search: `${searchQuery(this.state, this.props.comparisonType)}` });
+      this.setState({ submitted: true, message: "" })
     } else {
       event.preventDefault();
       this.setState({ message: errorMessage });
@@ -302,7 +302,6 @@ class Form extends Component {
         ) : null }
         <GraphCollection
           tradeRepository={this.props.tradeRepository}
-          comparisonType={this.props.comparisonType}
           submitted={this.state.submitted}
         />
       </div>

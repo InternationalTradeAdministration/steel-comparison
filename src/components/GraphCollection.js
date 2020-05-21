@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import ComparisonGraph from './ComparisonGraph';
 import Loader from 'react-loader-spinner';
+import queryString from 'query-string';
 
 class GraphCollection extends Component {
   constructor(props) {
     super(props)
     this.state = {
       results: null,
-      product_groups: null,
       total: 0,
       loadingResults: false,
       message: null,
@@ -16,11 +16,10 @@ class GraphCollection extends Component {
   }
 
   async componentDidUpdate(prevProps) {
-    if (this.props.location.search !== prevProps.location.search) {
+    if ((this.props.location.search !== prevProps.location.search) && (this.props.submitted)) {
       this.setState({ 
         loadingResults: true, 
         results: null,
-        product_groups: null,
         total: 0, 
         message: null,
       });
@@ -31,7 +30,6 @@ class GraphCollection extends Component {
         this.setState({
           results: tradeResponse.results,
           total: tradeResponse.total,
-          product_groups: tradeResponse.aggregations.product_groups,
           loadingResults: false,
           message: null,
         });
@@ -39,52 +37,50 @@ class GraphCollection extends Component {
     }
   }
 
-  aggregateByProductGroup = (results_array) => {
-    let paired_results = [];
-
-    if (this.props.comparisonType === "Product Groups") {
-      paired_results.push(results_array);
-      return paired_results; // return an array containing one nested array which contains 2 objects, representing the two datasets being compared
-    } else {
-      this.state.product_groups.forEach(function (item) {
-        paired_results.push(results_array.filter(entry => entry.product_group === item["key"]));
-      })
-      return paired_results; // return an array containing 6 nested arrays, where each array is a pair of objects, representing the two datasets being compared
-    }
-  }
-
   render() {
-    let dataset_label_key;
-    switch (this.props.comparisonType) {
-      case 'Product Groups':
-        dataset_label_key = 'product_group';
-        break;
-      case 'Reporting Countries':
-        dataset_label_key = 'reporter_country';
-        break;
-      case 'Partner Countries':
-        dataset_label_key = 'partner_country';
-        break;
-      case 'Trade Flows':
-        dataset_label_key = 'trade_flow';
-        break;
-      default:
-        dataset_label_key = null;
-        return dataset_label_key
-    };
+    const query = (this.props.location.search) ? (queryString.parse(this.props.location.search, {arrayFormat: 'comma'})) : {flow_type: "QTY", partner_countries: "World", product_groups: "", reporter_countries: "United States", trade_flow: ""};
+
+    const queryLabelKey = () => {
+      /* Deriving queryLabelKey based on the currently available query object */
+      if (query['product_groups'].length === 2) {
+          return 'product_groups';
+        } else if (query['reporter_countries'].length === 2) {
+          return 'reporter_countries';
+        } else if (query['partner_countries'].length === 2) {
+          return 'partner_countries';
+        } else if (query['trade_flow'].length === 0) {
+          return 'trade_flow';
+        }
+      };
+
+    const aggregateByProductGroup = (results_array) => {
+      const potential_product_groups = ["All Steel Mill Products", "Flat Products", "Long Products", "Pipe and Tube Products", "Semi-Finished Products", "Stainless Products"]
+      let paired_results = [];
+  
+      if (queryLabelKey() === "product_groups") {
+        paired_results.push(results_array);
+        return paired_results; // return an array containing one nested array which contains 2 objects, representing the two datasets being compared
+      } else {
+        potential_product_groups.forEach(function (item) {
+          if (results_array.filter(entry => entry.product_group === item).length > 0) {
+            paired_results.push(results_array.filter(entry => entry.product_group === item));
+          }
+        })
+        return paired_results; // return an array containing 6 nested arrays, where each array is a pair of objects, representing the two datasets being compared
+      }
+    }
 
     let paired_results_array = [];
-    if (this.state.results) {
-      paired_results_array = this.aggregateByProductGroup(this.state.results)
+    if (this.state.results && this.state.results.length > 0) {
+      paired_results_array = aggregateByProductGroup(this.state.results)
     }
-
     return (
       <div className="GraphCollection">
 
         {this.state.loadingResults ? (<div className="spinnerForCharts"><Loader type="RevolvingDot" color="#0071bc" width="100" /></div>) : null}
 
-        {((this.props.submitted) && (this.state.total > 0)) ? (
-          paired_results_array.map((r, i) => <ComparisonGraph key={i} data_array={r} dataset_label_key={dataset_label_key} />)
+        {((this.props.submitted) && (paired_results_array.length > 0)) ? (
+          paired_results_array.map((r, i) => <ComparisonGraph key={i} data_array={r} queryLabelKey={queryLabelKey()} />)
         ) : null}
 
         {(!this.state.loadingResults && this.state.message && this.state.total === 0) ? (
