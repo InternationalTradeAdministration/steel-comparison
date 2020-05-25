@@ -3,10 +3,8 @@
   "main.js": "./static/js/steel-search.js",
   "main.js.map": "./static/js/steel-search.js.map",
   "index.html": "./index.html",
-  "precache-manifest.0473c9745e0fd0ff81b12c52dc8820a7.js": "./precache-manifest.0473c9745e0fd0ff81b12c52dc8820a7.js",
+  "precache-manifest.35428ae067f45732182d27d2c34c8b17.js": "./precache-manifest.35428ae067f45732182d27d2c34c8b17.js",
   "service-worker.js": "./service-worker.js",
   "staging.html": "./staging.html",
-  "static/css/steel-search.css.map": "./static/css/steel-search.css.map",
-  "static/media/uswds.css": "./static/media/youtube15.9d356b3b.svg",
-  "static/media/styleguide.css": "./static/media/correct8-alt.c9a618b8.svg"
+  "static/css/steel-search.css.map": "./static/css/steel-search.css.map"
 }
