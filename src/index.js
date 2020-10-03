@@ -9,11 +9,11 @@ import { TradeRepository } from './repositories/TradeRepository';
 import './css/steel-search.css';
 import './css/dropdown-menus.css';
 
-function renderSteelSearch(divID, BASE_URL, API_KEY) {
+function renderSteelSearch(divID, BASE_URL) {
 
   ReactDOM.render(
     <HashRouter hashType="noslash">
-      <App tradeRepository={new TradeRepository(BASE_URL, API_KEY)} />
+      <App tradeRepository={new TradeRepository(BASE_URL)} />
     </HashRouter>,
     document.getElementById(divID)
   );
