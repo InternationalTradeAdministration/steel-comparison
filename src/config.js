@@ -1,6 +1,6 @@
 const footnote = 'Source: U.S. Department of Commerce, Enforcement and Compliance.  Includes content supplied by IHS Global Ltd.; Copyright © IHS Global, Ltd. All rights reserved.';
 const monitor_link = 'https://www.trade.gov/steel/global-monitor.asp';
-const GSTM_link = 'https://beta.trade.gov/gstm';
+const GSTM_link = 'https://www.trade.gov/data-visualization/gtsm';
 const faqs_link = 'https://www.trade.gov/steel/pdfs/faqs.pdf';
 const accessToken = 'b0045391-2ef8-3049-a215-f78b7716f045';
 
